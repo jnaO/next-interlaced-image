@@ -83,8 +83,8 @@ The component wraps the image in a `<span>`. Use `wrapperClassName` for anything
 ### Tuning the effect
 
 ```tsx
-// A 28.8k modem
-<InterlacedImage src={photo} alt="" speed={28.8} />
+// A slower connection, in kB/s
+<InterlacedImage src={photo} alt="" modem={28.8} />
 
 // A fixed two-second reveal
 <InterlacedImage src={photo} alt="" duration={2000} />
@@ -116,8 +116,8 @@ Takes every `next/image` prop except `placeholder`, plus:
 
 | Prop               | Default | Description                                                                                                                                       |
 | ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `speed`            | `416`   | Emulated download speed in kbit/s, like a modem's rating. The reveal length follows the image's file size.                                        |
-| `duration`         |         | Fixed reveal length in milliseconds. Overrides `speed`.                                                                                           |
+| `modem`            | `52`    | Emulated connection speed in kB/s. The reveal length follows the image's file size.                                                               |
+| `duration`         |         | Fixed reveal length in milliseconds. Overrides `modem`.                                                                                           |
 | `stack`            | `true`  | Shares the connection between images. The earliest gets the most, and later ones run slower until it finishes. `false` gives each the full speed. |
 | `lazy`             | `true`  | Holds the reveal until the image is in view. `false` starts it as soon as the image has loaded.                                                   |
 | `rowHeight`        | `4`     | Height of one interlaced row in pixels.                                                                                                           |
@@ -140,7 +140,7 @@ A GIF stores its rows out of order, in four passes through 8-row strips:
 
 - **The effect doesn't follow the real download.** The reveal starts once the image has loaded, and it replays on every page view, including for cached images.
 - **`lazy` holds the reveal, not the file.** The file loads whenever `next/image` decides, so the reveal can start at once when the image scrolls into view.
-- **`speed` needs a file size.** It uses the size the browser reports. If there is none, as with most cross-origin images, the size is estimated from the image's dimensions.
+- **`modem` needs a file size.** It uses the size the browser reports. If there is none, as with most cross-origin images, the size is estimated from the image's dimensions.
 - **Stack order is the order reveals start,** which can differ from page order.
 - **The reveal always plays,** including with Reduce Motion on.
 

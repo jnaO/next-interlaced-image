@@ -14,9 +14,9 @@ export type InterlacedImageProps = Omit<ImageProps, 'placeholder'> & {
   wrapperClassName?: string;
   /** Height of one interlaced row in pixels. Defaults to 4. */
   rowHeight?: number;
-  /** Emulated download speed in kbit/s, like a modem's rating. The reveal length follows the image's file size. Defaults to 416. */
-  speed?: number;
-  /** Fixed reveal length in milliseconds. Overrides `speed`. */
+  /** Emulated connection speed in kB/s. The reveal length follows the image's file size. Defaults to 52. */
+  modem?: number;
+  /** Fixed reveal length in milliseconds. Overrides `modem`. */
   duration?: number;
   /** Shares the connection with other images: the earliest gets the most, later ones run slower until it finishes. Defaults to true. */
   stack?: boolean;
@@ -28,8 +28,6 @@ const noscriptStyles = '[data-interlaced] > img { opacity: 1; }';
 
 // Fallback for when the browser does not report a file size.
 const estimatedBytesPerPixel = 0.25;
-
-const bitsPerByte = 8;
 
 // First row and row spacing of each GIF pass, within 8-row strips.
 const gifPasses = [
@@ -88,7 +86,7 @@ export function InterlacedImage({
   blurDataURL,
   wrapperClassName,
   rowHeight = 4,
-  speed = 416,
+  modem = 52,
   duration,
   stack = true,
   lazy = true,
@@ -156,9 +154,7 @@ export function InterlacedImage({
     const row = Math.max(1, Math.round(rowHeight * pixelRatio));
     const rows = interlacedRows(Math.ceil(frameHeight / row));
     const progressPerMs =
-      duration === undefined
-        ? speed / bitsPerByte / imageBytes(image)
-        : 1 / duration;
+      duration === undefined ? modem / imageBytes(image) : 1 / duration;
 
     const reveal = {};
     if (stack) stackedReveals.push(reveal);
@@ -207,7 +203,7 @@ export function InterlacedImage({
       cancelAnimationFrame(animationFrame);
       leaveStack(reveal);
     };
-  }, [revealing, rowHeight, duration, speed, stack]);
+  }, [revealing, rowHeight, duration, modem, stack]);
 
   const wrapperStyle: CSSProperties | undefined =
     !done && placeholder
