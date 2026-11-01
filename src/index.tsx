@@ -37,6 +37,9 @@ const gifPasses = [
   { start: 1, step: 2 },
 ];
 
+// The final pass erases the canvas to show the real image underneath.
+const finalPassStart = 1;
+
 const stackedReveals: object[] = [];
 
 const stackShare = (reveal: object) => {
@@ -69,9 +72,11 @@ const imageBytes = (image: HTMLImageElement) => {
 
 const interlacedRows = (rowCount: number) =>
   gifPasses.flatMap(({ start, step }) => {
-    const rows: { row: number; span: number }[] = [];
-    for (let row = start; row < rowCount; row += step) {
-      rows.push({ row, span: start === 0 ? 8 : start });
+    const rows: { row: number; span: number; final: boolean }[] = [];
+    const final = start === finalPassStart;
+    const end = final ? rowCount + 1 : rowCount;
+    for (let row = start; row < end; row += step) {
+      rows.push({ row, span: start === 0 ? 8 : start, final });
     }
     return rows;
   });
@@ -91,6 +96,7 @@ export function InterlacedImage({
 }: InterlacedImageProps) {
   const [loaded, setLoaded] = useState(false);
   const [inView, setInView] = useState(!lazy);
+  const [imageVisible, setImageVisible] = useState(false);
   const [done, setDone] = useState(false);
   const wrapperRef = useRef<HTMLSpanElement>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -130,17 +136,23 @@ export function InterlacedImage({
     const { objectFit, objectPosition } = getComputedStyle(image);
     canvas.style.objectFit = objectFit;
     canvas.style.objectPosition = objectPosition;
-    canvas.width = naturalWidth;
-    canvas.height = naturalHeight;
+
+    const pixelRatio = window.devicePixelRatio || 1;
+    const displayScale = Math.max(width / naturalWidth, height / naturalHeight);
+    const frameWidth = Math.round(naturalWidth * displayScale * pixelRatio);
+    const frameHeight = Math.round(naturalHeight * displayScale * pixelRatio);
+    canvas.width = frameWidth;
+    canvas.height = frameHeight;
 
     const frame = document.createElement('canvas');
-    frame.width = naturalWidth;
-    frame.height = naturalHeight;
-    frame.getContext('2d')?.drawImage(image, 0, 0, naturalWidth, naturalHeight);
+    frame.width = frameWidth;
+    frame.height = frameHeight;
+    const frameContext = frame.getContext('2d');
+    if (frameContext) frameContext.imageSmoothingQuality = 'high';
+    frameContext?.drawImage(image, 0, 0, frameWidth, frameHeight);
 
-    const displayScale = Math.max(width / naturalWidth, height / naturalHeight);
-    const row = Math.max(1, Math.round(rowHeight / displayScale));
-    const rows = interlacedRows(Math.ceil(naturalHeight / row));
+    const row = Math.max(1, Math.round(rowHeight * pixelRatio));
+    const rows = interlacedRows(Math.ceil(frameHeight / row));
     const progressPerMs =
       duration === undefined ? speed / imageBytes(image) : 1 / duration;
 
@@ -159,18 +171,24 @@ export function InterlacedImage({
       previous = now;
       const target = Math.ceil(progress * rows.length);
       for (; drawn < target; drawn += 1) {
-        const y = rows[drawn].row * row;
-        context.drawImage(
-          frame,
-          0,
-          y,
-          naturalWidth,
-          row,
-          0,
-          y,
-          naturalWidth,
-          row * rows[drawn].span,
-        );
+        const { row: rowIndex, span, final } = rows[drawn];
+        const y = rowIndex * row;
+        if (final) {
+          setImageVisible(true);
+          context.clearRect(0, y - row, frameWidth, row * 2);
+        } else {
+          context.drawImage(
+            frame,
+            0,
+            y,
+            frameWidth,
+            row,
+            0,
+            y,
+            frameWidth,
+            row * span,
+          );
+        }
       }
       if (progress < 1) {
         animationFrame = requestAnimationFrame(tick);
@@ -197,7 +215,7 @@ export function InterlacedImage({
       ref={wrapperRef}
       className={wrapperClassName}
       style={wrapperStyle}
-      data-interlaced={done ? 'done' : 'loading'}
+      data-interlaced={imageVisible ? 'done' : 'loading'}
       data-fill={fill || undefined}
     >
       <Image src={src} fill={fill} onLoad={handleLoad} {...imageProps} />
