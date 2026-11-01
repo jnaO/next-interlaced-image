@@ -58,7 +58,7 @@ With `fill`, the image fills its nearest positioned parent. `className` goes on 
 ```tsx
 <header className="hero">
   <InterlacedImage src={photo} alt="" fill priority className="cover" />
-</header>
+</header>;
 ```
 
 ```css
@@ -77,7 +77,7 @@ With `fill`, the image fills its nearest positioned parent. `className` goes on 
 The component wraps the image in a `<span>`. Use `wrapperClassName` for anything that affects layout, such as width:
 
 ```tsx
-<InterlacedImage src={photo} alt="" wrapperClassName="half-width" />
+<InterlacedImage src={photo} alt="" wrapperClassName="half-width" />;
 ```
 
 ### Tuning the effect
@@ -107,7 +107,7 @@ Pixels come from the tiny placeholder Next.js creates for static imports. For re
   width={1500}
   height={845}
   blurDataURL="data:image/jpeg;base64,..."
-/>
+/>;
 ```
 
 ## Props
@@ -127,12 +127,12 @@ Takes every `next/image` prop except `placeholder`, plus:
 
 A GIF stores its rows out of order, in four passes through 8-row strips:
 
-| Pass | Rows             | Drawn as           |
-| ---- | ---------------- | ------------------ |
-| 1    | Every 8th row    | 8 rows tall        |
-| 2    | Rows between     | 4 rows tall        |
-| 3    | Every 4th row    | 2 rows tall        |
-| 4    | Every other row  | The finished image |
+| Pass | Rows            | Drawn as           |
+| ---- | --------------- | ------------------ |
+| 1    | Every 8th row   | 8 rows tall        |
+| 2    | Rows between    | 4 rows tall        |
+| 3    | Every 4th row   | 2 rows tall        |
+| 4    | Every other row | The finished image |
 
 `InterlacedImage` loads the image normally, then replays those passes on a canvas over it. Pass 4 erases the canvas instead of drawing on it, which uncovers the real `<img>`.
 

@@ -2,7 +2,7 @@
 
 ## First release
 
-Status: the code is ready, but it is not on GitHub or npm yet. Publishing is waiting on the npm account reset.
+Status: the code is on GitHub, but not on npm yet. Publishing is waiting on the npm account reset.
 
 1. Finish the npm account reset and set up 2FA.
 2. Check that the name is still free. A 404 means it is:
@@ -17,12 +17,6 @@ Status: the code is ready, but it is not on GitHub or npm yet. Publishing is wai
    nvm use 26
    npm login
    npm publish
-   ```
-
-4. Make the GitHub repo public, if it is still private:
-
-   ```sh
-   gh repo edit jnaO/next-interlaced-image --visibility public --accept-visibility-change-consequences
    ```
 
 ## After the first release: Valaberget
