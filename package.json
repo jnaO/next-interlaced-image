@@ -1,0 +1,53 @@
+{
+  "name": "next-interlaced-image",
+  "version": "0.1.0",
+  "description": "next/image with a 90s interlaced GIF loading effect",
+  "license": "MIT",
+  "author": "jnaO",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jnaO/next-interlaced-image.git"
+  },
+  "keywords": [
+    "next",
+    "nextjs",
+    "image",
+    "placeholder",
+    "interlaced",
+    "gif",
+    "retro"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "scripts": {
+    "build": "tsc && cp src/styles.css dist/styles.css",
+    "lint": "biome check",
+    "prepublishOnly": "pnpm lint && pnpm build"
+  },
+  "peerDependencies": {
+    "next": ">=16",
+    "react": ">=19"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.4",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "next": "^16.4.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "^7.0.2"
+  }
+}
