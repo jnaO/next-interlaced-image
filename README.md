@@ -84,7 +84,7 @@ The component wraps the image in a `<span>`. Use `wrapperClassName` for anything
 
 ```tsx
 // A 28.8k modem
-<InterlacedImage src={photo} alt="" speed={3.6} />
+<InterlacedImage src={photo} alt="" speed={28.8} />
 
 // A fixed two-second reveal
 <InterlacedImage src={photo} alt="" duration={2000} />
@@ -116,7 +116,7 @@ Takes every `next/image` prop except `placeholder`, plus:
 
 | Prop               | Default | Description                                                                                                                                       |
 | ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `speed`            | `52`    | Emulated download speed in kB/s. The reveal length follows the image's file size.                                                                 |
+| `speed`            | `416`   | Emulated download speed in kbit/s, like a modem's rating. The reveal length follows the image's file size.                                        |
 | `duration`         |         | Fixed reveal length in milliseconds. Overrides `speed`.                                                                                           |
 | `stack`            | `true`  | Shares the connection between images. The earliest gets the most, and later ones run slower until it finishes. `false` gives each the full speed. |
 | `lazy`             | `true`  | Holds the reveal until the image is in view. `false` starts it as soon as the image has loaded.                                                   |
