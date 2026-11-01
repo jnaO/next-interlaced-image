@@ -1,0 +1,36 @@
+[data-interlaced] {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  image-rendering: pixelated;
+}
+
+[data-interlaced][data-fill] {
+  position: absolute;
+  inset: 0;
+}
+
+[data-interlaced] > img {
+  display: block;
+  image-rendering: auto;
+}
+
+[data-interlaced]:not([data-fill]) > img {
+  width: 100%;
+  height: auto;
+}
+
+[data-interlaced]:not([data-interlaced="done"]) > img {
+  opacity: 0;
+}
+
+[data-interlaced] > canvas {
+  image-rendering: auto;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}

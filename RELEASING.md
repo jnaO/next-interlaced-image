@@ -2,7 +2,7 @@
 
 ## First release
 
-Status: the code is on GitHub, but not on npm yet. Publishing is waiting on the npm account reset.
+Status: the code is on GitHub, but not on npm yet. Publishing is waiting on the npm account reset. Until then `dist` is committed, so Valaberget can install this package directly from GitHub.
 
 1. Finish the npm account reset and set up 2FA.
 2. Check that the name is still free. A 404 means it is:
@@ -21,7 +21,7 @@ Status: the code is on GitHub, but not on npm yet. Publishing is waiting on the 
 
 ## After the first release: Valaberget
 
-Branch `feat/image-placeholders` in `~/Sites/valaberget` holds the integration as uncommitted changes. It installs this package from `file:../next-interlaced-image`, which fails on Vercel, so do not deploy it yet.
+Valaberget installs this package from GitHub.
 
 1. In Valaberget, replace the local install with the published version:
 
@@ -31,3 +31,7 @@ Branch `feat/image-placeholders` in `~/Sites/valaberget` holds the integration a
 
 2. Run lint, `tsc --noEmit` and `pnpm build`, then check the pages in a browser.
 3. Commit and open the PR.
+
+## After the first release: clean up
+
+Add `dist` back to `.gitignore` and run `git rm -r --cached dist`.
