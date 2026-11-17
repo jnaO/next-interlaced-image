@@ -1,6 +1,6 @@
 {
   "name": "next-interlaced-image",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "next/image with a 90s interlaced GIF loading effect",
   "license": "MIT",
   "author": "jnaO",
